@@ -3,7 +3,7 @@
 import Input from '@/components/Input';
 import axios from 'axios';
 import { useSearchParams } from 'next/navigation';
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { z } from 'zod';
 
 interface data {
@@ -16,6 +16,27 @@ interface data {
 const ErrorHandlingText = ({ errorText }: { errorText?: string }) =>
   errorText && <span className='text-red-700'>{errorText}</span>;
 
+const SumbitButton = ({
+  handleSubmit
+}: {
+  handleSubmit: (e: any, heroImageId: string) => void;
+}) => {
+  const searchParams = useSearchParams();
+  const heroImageId = searchParams.get('imageId');
+
+  return (
+    <button
+      className='bg-white text-black p-3 rounded-md m-4'
+      onClick={(e) => {
+        if (heroImageId) handleSubmit(e, heroImageId);
+        else alert('Image Id not Found');
+      }}
+    >
+      Submit
+    </button>
+  );
+};
+
 const UploadDetails = () => {
   const [filmTitle, setfilmTitle] = useState('');
   const [directorsName, setdirectorsName] = useState('');
@@ -23,10 +44,6 @@ const UploadDetails = () => {
   const [category, setcategory] = useState('');
 
   const [errors, setErrors] = useState<Partial<data>>({});
-
-  const searchParams = useSearchParams();
-
-  const heroImageId = searchParams.get('imageId');
 
   const userSchema = z.object({
     filmTitle: z.string().min(3, 'Film Title must be at least 2 characters'),
@@ -45,7 +62,7 @@ const UploadDetails = () => {
     }
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: any, heroImageId: string) => {
     e.preventDefault();
 
     try {
@@ -64,7 +81,7 @@ const UploadDetails = () => {
       // Form is invalid, update error state
       if (error instanceof z.ZodError) setErrors(error.formErrors.fieldErrors);
       console.log('errro', error);
-      // alert(error);
+      alert(error);
     }
   };
 
@@ -86,9 +103,9 @@ const UploadDetails = () => {
       <Input setValue={setcategory} value={category} placeholder='Enter Vimeo Id; Eg-w5BTJbTb24M' />
 
       {errors.category && <ErrorHandlingText errorText={errors.category} />}
-      <button className='bg-white text-black p-3 rounded-md m-4' onClick={(e) => handleSubmit(e)}>
-        Submit
-      </button>
+      <Suspense>
+        <SumbitButton handleSubmit={handleSubmit} />
+      </Suspense>
     </div>
   );
 };
