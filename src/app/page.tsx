@@ -2,6 +2,7 @@
 
 import Input from '@/components/Input';
 import { IKContext, IKUpload } from 'imagekitio-react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -39,19 +40,27 @@ export default function Home() {
   };
 
   return (
-    <main className='flex min-h-screen flex-col p-24'>
-      <IKContext urlEndpoint={urlEndpoint} publicKey={publicKey} authenticator={authenticator}>
-        <p>Upload an image</p>
-        <Input placeholder='Image Name' setValue={setfileName} value={fileName} />
-        {!fileName && <div>Without a file name, you can not upload an image</div>}
-        {fileName && (
-          <IKUpload
-            fileName={fileName.replace(/ /g, '-')}
-            onError={onError}
-            onSuccess={onSuccess}
-          />
-        )}
-      </IKContext>
+    <main className='flex min-h-screen items-center flex-col p-24'>
+      <div className='self-start'>
+        <IKContext urlEndpoint={urlEndpoint} publicKey={publicKey} authenticator={authenticator}>
+          <p>Upload an image</p>
+          <Input placeholder='Image Name' setValue={setfileName} value={fileName} />
+          {!fileName && <div>Without a file name, you can not upload an image</div>}
+          {fileName && (
+            <IKUpload
+              fileName={fileName.replace(/ /g, '-')}
+              onError={onError}
+              onSuccess={onSuccess}
+            />
+          )}
+        </IKContext>
+      </div>
+      <Link
+        href='/all-films'
+        className='p-4 my-4 rounded-lg bg-white text-black text-lg font-semibold'
+      >
+        View All Films
+      </Link>
     </main>
   );
 }
