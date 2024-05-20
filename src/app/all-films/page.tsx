@@ -1,6 +1,7 @@
 import DeleteHandler from '@/components/DeleteHandler';
 import axios from 'axios';
 import Image from 'next/image';
+import Link from 'next/link';
 
 type VideoInfo = {
   _id: string;
@@ -25,6 +26,10 @@ const AllFilms = async () => {
 
   return (
     <div>
+      <Link className='text-red-400 text-3xl ' href='/'>
+        Back to Home
+      </Link>
+      <div className='text-white text-3xl'>All Films</div>
       {getAllFilmsResponse?.map(
         ({ _id, heroImageId, fileTitle, directorsName, youtubeEmbedId }) => (
           <div className='flex flex-row' key={_id}>

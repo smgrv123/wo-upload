@@ -2,7 +2,7 @@
 
 import Input from '@/components/Input';
 import axios from 'axios';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useState } from 'react';
 import { z } from 'zod';
 
@@ -42,8 +42,9 @@ const UploadDetails = () => {
   const [directorsName, setdirectorsName] = useState('');
   const [vimeoId, setvimeoId] = useState('');
   const [category, setcategory] = useState('');
-
   const [errors, setErrors] = useState<Partial<data>>({});
+
+  const router = useRouter();
 
   const userSchema = z.object({
     filmTitle: z.string().min(3, 'Film Title must be at least 2 characters'),
@@ -51,16 +52,6 @@ const UploadDetails = () => {
     vimeoId: z.string().min(4, 'Vimeo ID invalid'),
     category: z.string().min(2, 'Enter cateogry')
   });
-
-  const validateField = (fieldName: keyof data, fieldValue: string) => {
-    try {
-      userSchema.shape[fieldName].parse(fieldValue);
-      setErrors((prevErrors) => ({ ...prevErrors, [fieldName]: null }));
-    } catch (error) {
-      if (error instanceof z.ZodError)
-        setErrors((prevErrors) => ({ ...prevErrors, [fieldName]: error.message }));
-    }
-  };
 
   const handleSubmit = async (e: any, heroImageId: string) => {
     e.preventDefault();
@@ -77,6 +68,7 @@ const UploadDetails = () => {
         category
       });
       console.log('response', response);
+      router.replace('/');
     } catch (error) {
       // Form is invalid, update error state
       if (error instanceof z.ZodError) setErrors(error.formErrors.fieldErrors);
