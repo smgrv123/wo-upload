@@ -13,11 +13,7 @@ type VideoInfo = {
 
 const getAllFilms = async () => {
   try {
-    const fetchResponse = await fetch('https://white-owl-backend.onrender.com/films/get', {
-      next: {
-        revalidate: 5
-      }
-    });
+    const fetchResponse = await fetch('https://white-owl-backend.onrender.com/');
     const response = await fetchResponse.json();
     return response as VideoInfo[];
   } catch (error) {
