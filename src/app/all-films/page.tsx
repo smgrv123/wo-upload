@@ -13,7 +13,9 @@ type VideoInfo = {
 
 const getAllFilms = async () => {
   try {
-    const fetchResponse = await fetch('https://white-owl-backend.onrender.com/films/get');
+    const fetchResponse = await fetch('https://white-owl-backend.onrender.com/films/get', {
+      cache: 'no-cache'
+    });
     const response = await fetchResponse.json();
     return response as VideoInfo[];
   } catch (error) {
@@ -23,7 +25,6 @@ const getAllFilms = async () => {
 
 const AllFilms = async () => {
   const getAllFilmsResponse = await getAllFilms();
-  console.log('first', getAllFilmsResponse);
   return (
     <div>
       <Link className='text-red-400 text-3xl ' href='/'>
