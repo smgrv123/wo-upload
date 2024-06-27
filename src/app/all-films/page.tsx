@@ -1,5 +1,4 @@
 import DeleteHandler from '@/components/DeleteHandler';
-import axios from 'axios';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -14,8 +13,13 @@ type VideoInfo = {
 
 const getAllFilms = async () => {
   try {
-    const response = await axios.get('https://white-owl-backend.onrender.com/films/get');
-    return response?.data as VideoInfo[];
+    const fetchResponse = await fetch('https://white-owl-backend.onrender.com/films/get', {
+      next: {
+        revalidate: 5
+      }
+    });
+    const response = await fetchResponse.json();
+    return response as VideoInfo[];
   } catch (error) {
     console.log('error', error);
   }
@@ -23,7 +27,6 @@ const getAllFilms = async () => {
 
 const AllFilms = async () => {
   const getAllFilmsResponse = await getAllFilms();
-
   return (
     <div>
       <Link className='text-red-400 text-3xl ' href='/'>
