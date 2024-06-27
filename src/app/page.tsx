@@ -51,6 +51,8 @@ export default function Home() {
               fileName={fileName.replace(/ /g, '-')}
               onError={onError}
               onSuccess={onSuccess}
+              type='file'
+              accept='image/*'
             />
           )}
         </IKContext>

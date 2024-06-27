@@ -49,7 +49,14 @@ const UploadDetails = () => {
   const userSchema = z.object({
     filmTitle: z.string().min(3, 'Film Title must be at least 2 characters'),
     directorName: z.string(),
-    vimeoId: z.string().min(4, 'Vimeo ID invalid'),
+    vimeoId: z
+      .string()
+      .min(4, 'Vimeo ID invalid')
+      .refine((val) => {
+        const vimeoURLRegex =
+          /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#]$/;
+        return !vimeoURLRegex.test(val);
+      }),
     category: z.string().min(2, 'Enter cateogry')
   });
 
@@ -73,7 +80,6 @@ const UploadDetails = () => {
       // Form is invalid, update error state
       if (error instanceof z.ZodError) setErrors(error.formErrors.fieldErrors);
       console.log('errro', error);
-      alert(error);
     }
   };
 
@@ -88,11 +94,19 @@ const UploadDetails = () => {
 
       {errors.directorName && <ErrorHandlingText errorText={errors.filmTitle} />}
       <p>Vimeo Id</p>
-      <Input setValue={setvimeoId} value={vimeoId} placeholder='Enter Vimeo Id; Eg-w5BTJbTb24M' />
+      <Input
+        setValue={setvimeoId}
+        value={vimeoId}
+        placeholder='Enter Vimeo Video Id; Eg-w5BTJbTb24M'
+      />
       {errors.vimeoId && <ErrorHandlingText errorText={errors.vimeoId} />}
 
       <p>Category</p>
-      <Input setValue={setcategory} value={category} placeholder='Enter Vimeo Id; Eg-w5BTJbTb24M' />
+      <Input
+        setValue={setcategory}
+        value={category}
+        placeholder='Enter Category Id; Eg-Truecaller'
+      />
 
       {errors.category && <ErrorHandlingText errorText={errors.category} />}
       <Suspense>
